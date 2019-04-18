@@ -23,7 +23,7 @@
             List
         </span>
 
-        <button class="addButton glyphicon glyphicon-plus addButton" type="button" onclick="location.href='@Url.Action("AddSelect", new {resources = @Html.Raw(Json.Encode(Model)) })'" />
+        <button class="addButton glyphicon glyphicon-plus addButton" type="button" onclick="location.href='@Url.Action("AddSelect")'" />
     </div>
     <table class="MainTable table">
         <thead>
@@ -45,10 +45,9 @@
                         <td scope="row">
                             @item.Id
                             @Html.TextBox("id", item.Id, new { style = "display: none;" })
-                            @Html.TextBox("resources", @Html.Raw(Json.Encode(Model)), new { style = "display: none;" })
                         </td>
                         <td>
-                            @if (i != Model.UpdateIndex)
+                            @if (item.Id != Model.UpdateIndex)
                             {
                                 @item.Name
                             }
@@ -58,29 +57,30 @@
                             }
                         </td>
                         <td>
-                            @if (i != Model.UpdateIndex)
+                            @if (item.Id != Model.UpdateIndex)
                             {
                                 @item.Locale
                             }
                             else
                             {
-                                @Html.EnumDropDownListFor(m => m.Location, item.Locale)
+                                @*@Html.EnumDropDownListFor(m => m.Location, item.Locale)*@
+                                @Html.DropDownList("Location", Model.locate)
                             }
                         </td>
                         <td>@item.CreateDate</td>
                         <td>@item.UpdateDate</td>
-                        @if (i != Model.UpdateIndex)
+                        @if (item.Id != Model.UpdateIndex)
                         {
                             <td>
-                                <button class="btn-primary glyphicon glyphicon-pencil" type="button" onclick="location.href='@Url.Action("UpdateSelect", new { id = @item.Id, resources = @Html.Raw(Json.Encode(Model)) })'" />
-                                <button type="button" class="btn-primary glyphicon glyphicon-trash" onclick="location.href='@Url.Action("Delete", new { id = @item.Id, resources = @Html.Raw(Json.Encode(Model)) })'" />
+                                <button class="btn-primary glyphicon glyphicon-pencil" type="button" onclick="location.href='@Url.Action("UpdateSelect", new { id = @item.Id })'" />
+                                <button type="button" class="btn-primary glyphicon glyphicon-trash" onclick="location.href='@Url.Action("Delete", new { id = @item.Id })'" />
                             </td>
                         }
                         else
                         {
                             <td>
                                 <button class="btn-success glyphicon glyphicon-ok" type="submit" />
-                                <button type="button" class="btn-danger glyphicon glyphicon-remove" onclick="location.href='@Url.Action("Cancel", new { id = @item.Id, resources = @Html.Raw(Json.Encode(Model)) })'" />
+                                <button type="button" class="btn-danger glyphicon glyphicon-remove" onclick="location.href='@Url.Action("List")'" />
                             </td>
                         }
 
@@ -107,7 +107,7 @@
                             <td></td>
                             <td>
                             <button class="btn-success glyphicon glyphicon-ok" type="submit" />
-                            <button type="button" class="btn-danger glyphicon glyphicon-remove" onclick="location.href='@Url.Action("Cancel", new { id = 0, resources = @Html.Raw(Json.Encode(Model)) })'" />
+                            <button type="button" class="btn-danger glyphicon glyphicon-remove" onclick="location.href='@Url.Action("List")'" />
                             </td>
                             @*<td><input type="button" value="D" onclick="location.href='@Url.Action("Insert", new { locate = "", resources = @Html.Raw(Json.Encode(Model)) })'" /></td>*@
                         }

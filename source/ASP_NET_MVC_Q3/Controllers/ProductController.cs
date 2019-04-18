@@ -14,24 +14,20 @@ namespace ASP_NET_MVC_Q3.Controllers
         ProductViewModel source;
         public ActionResult List()
         {
-            source = new ProductViewModel();
-            source.Products = Product.Data;
-            source.UpdateIndex = -1;
+            source = resetModel();
             return View(source);
         }
 
-        public ActionResult Delete(int id, string resources)
+        public ActionResult Delete(int id)
         {
-            source = DeserializeProductVM(resources);
-            source.Products = source.Products.Where(x => x.Id != id).ToList();
-            source.UpdateIndex = -1;
-            source.Add = false;
+            source = resetModel();
+            Product.Data = Product.Data.Where(x => x.Id != id).ToList();
+            source.Products = Product.Data;
             return View("List", source);
         }
-        public ActionResult Insert(string name, string resources, int Location = -1)
+        public ActionResult Insert(string name, int Location = -1)
         {
-            source = new ProductViewModel();
-            source = DeserializeProductVM(resources);
+            source = resetModel();
             if (!String.IsNullOrEmpty(name) && Location > 0)
             {
                 source.Products.Add(
@@ -43,49 +39,51 @@ namespace ASP_NET_MVC_Q3.Controllers
                         CreateDate = DateTime.Now,
                     });
             }
-            source.UpdateIndex = -1;
-            source.Add = false;
             return View("List", source);
         }
-        public ActionResult UpdateSelect(int id, string resources)
+        public ActionResult UpdateSelect(int id)
         {
-            source = new ProductViewModel();
-            source = DeserializeProductVM(resources);
-            source.UpdateIndex = id - 1;
-            source.Add = false;
+            source = resetModel();
+            source.UpdateIndex = id;
+            source.locate = setLocateList();
+            source.locate.Where(x => x.Value == source.Products.Where(y => y.Id == id).FirstOrDefault().Locale).FirstOrDefault().Selected = true;
             return View("List", source);
         }
         
-        public ActionResult AddSelect(string resources)
+        public ActionResult AddSelect()
         {
-            source = new ProductViewModel();
-            source = DeserializeProductVM(resources);
-            source.UpdateIndex = -1;
+            source = resetModel();
             source.Add = true;
-            return View("List", source);
-        }
-        public ActionResult Update(int id, string resources, string updateName, int Location)
-        {
-            source = new ProductViewModel();
-            source = DeserializeProductVM(resources);
-            source.Products.Where(x => x.Id == id).FirstOrDefault().Name = updateName;
-            source.Products.Where(x => x.Id == id).FirstOrDefault().Locale = ((locate)Location).ToString();
-            source.Products.Where(x => x.Id == id).FirstOrDefault().UpdateDate = DateTime.Now;
-            source.UpdateIndex = -1;
-            return View("List", source);
-        }
-        public ActionResult Cancel(int id, string resources)
-        {
-            source = new ProductViewModel();
-            source = DeserializeProductVM(resources);
-            source.UpdateIndex = -1;
-            source.Add = false;
+            source.locate = setLocateList();
             return View("List", source);
         }
 
-        public ProductViewModel DeserializeProductVM(string resouce)
+        [HttpPost]
+        public ActionResult Update(int id, string updateName, string Location)
         {
-            return new JavaScriptSerializer().Deserialize<ProductViewModel>(resouce);
+            source = resetModel();
+            source.Products.Where(x => x.Id == id).FirstOrDefault().Name = updateName;
+            source.Products.Where(x => x.Id == id).FirstOrDefault().Locale = Location;
+            source.Products.Where(x => x.Id == id).FirstOrDefault().UpdateDate = DateTime.Now;
+            return View("List", source);
+        }
+        
+        public ProductViewModel resetModel()
+        {
+            source = new ProductViewModel();
+            source.Products = Product.Data;
+            source.UpdateIndex = -1;
+            source.Add = false;
+            return source;
+        }
+
+        public List<SelectListItem> setLocateList()
+        {
+            return Enum.GetValues(typeof(locate)).Cast<locate>().Select(v => new SelectListItem
+            {
+                Text = v.ToString(),
+                Value = v.ToString()
+            }).ToList();
         }
     }
 }
