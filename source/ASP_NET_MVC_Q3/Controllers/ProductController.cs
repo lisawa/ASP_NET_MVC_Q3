@@ -23,12 +23,12 @@ namespace ASP_NET_MVC_Q3.Controllers
             source = resetModel();
             Product.Data = Product.Data.Where(x => x.Id != id).ToList();
             source.Products = Product.Data;
-            return View("List", source);
+            return RedirectToAction("List");
         }
         public ActionResult Insert(string name, int Location = -1)
         {
             source = resetModel();
-            if (!String.IsNullOrEmpty(name) && Location > 0)
+            if (!String.IsNullOrEmpty(name) && Location >= 0)
             {
                 source.Products.Add(
                     new Product
@@ -39,7 +39,8 @@ namespace ASP_NET_MVC_Q3.Controllers
                         CreateDate = DateTime.Now,
                     });
             }
-            return View("List", source);
+
+            return RedirectToAction("List");
         }
         public ActionResult UpdateSelect(int id)
         {
@@ -65,7 +66,8 @@ namespace ASP_NET_MVC_Q3.Controllers
             source.Products.Where(x => x.Id == id).FirstOrDefault().Name = updateName;
             source.Products.Where(x => x.Id == id).FirstOrDefault().Locale = vm.nowLocate;
             source.Products.Where(x => x.Id == id).FirstOrDefault().UpdateDate = DateTime.Now;
-            return View("List", source);
+
+            return RedirectToAction("List");
         }
 
         public ProductViewModel resetModel()
