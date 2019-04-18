@@ -18,6 +18,8 @@ namespace ASP_NET_MVC_Q3.Models
 
         public List<SelectListItem> locate { get; set; }
 
+        public string nowLocate { get; set; }
+
         public locate Location { get; set; }
     }
 }

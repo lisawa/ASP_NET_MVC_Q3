@@ -57,17 +57,17 @@ namespace ASP_NET_MVC_Q3.Controllers
             source.locate = setLocateList();
             return View("List", source);
         }
-
+        
         [HttpPost]
-        public ActionResult Update(int id, string updateName, string Location)
+        public ActionResult Update(ProductViewModel vm, int id, string updateName)
         {
             source = resetModel();
             source.Products.Where(x => x.Id == id).FirstOrDefault().Name = updateName;
-            source.Products.Where(x => x.Id == id).FirstOrDefault().Locale = Location;
+            source.Products.Where(x => x.Id == id).FirstOrDefault().Locale = vm.nowLocate;
             source.Products.Where(x => x.Id == id).FirstOrDefault().UpdateDate = DateTime.Now;
             return View("List", source);
         }
-        
+
         public ProductViewModel resetModel()
         {
             source = new ProductViewModel();

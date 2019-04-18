@@ -45,6 +45,7 @@
                         <td scope="row">
                             @item.Id
                             @Html.TextBox("id", item.Id, new { style = "display: none;" })
+                            
                         </td>
                         <td>
                             @if (item.Id != Model.UpdateIndex)
@@ -63,8 +64,7 @@
                             }
                             else
                             {
-                                @*@Html.EnumDropDownListFor(m => m.Location, item.Locale)*@
-                                @Html.DropDownList("Location", Model.locate)
+                                @Html.DropDownListFor(x => x.nowLocate, Model.locate)
                             }
                         </td>
                         <td>@item.CreateDate</td>
