@@ -1,0 +1,26 @@
+﻿body {
+}
+
+.MainTable{
+    margin-left:10px;
+}
+
+button{
+    border-radius:20%;
+    font-size:15px;
+    margin:2px;
+}
+
+.pageTitle{
+    margin:15px;
+    font-size:30px;
+}
+
+
+.addButton {
+    font-size: 20px;
+    position: absolute;
+    top: 35px;
+    right: 80px;
+    color: steelblue;
+}

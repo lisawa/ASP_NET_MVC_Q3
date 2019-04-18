@@ -1,40 +1,120 @@
-﻿@model IEnumerable<ASP_NET_MVC_Q3.Data.Product>
+﻿@model ASP_NET_MVC_Q3.Models.ProductViewModel
 
 @{
     Layout = null;
 }
 
 <!DOCTYPE html>
-
+<style>
+</style>
 <html>
 <head>
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <link href="~/Content/Style.css" rel="stylesheet" typeof="text/css" />
     <meta name="viewport" content="width=device-width" />
     <title>List</title>
 </head>
 <body>
-    <h2>List</h2>
-    <table>
+    <div style="height:20px;"></div>
+    <div>
+        <span class="pageTitle">
+            List
+        </span>
+
+        <button class="addButton glyphicon glyphicon-plus addButton" type="button" onclick="location.href='@Url.Action("AddSelect", new {resources = @Html.Raw(Json.Encode(Model)) })'" />
+    </div>
+    <table class="MainTable table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>ProductName</th>
-                <th>Locale</th>
-                <th>CreateDate</th>
-                <th>UpdateDate</th>
+                <th scope="col">Id</th>
+                <th scope="col">ProductName</th>
+                <th scope="col">Locale</th>
+                <th scope="col">CreateDate</th>
+                <th scope="col">UpdateDate</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @for (int i = 0; i < Model.Products.Count(); i++)
             {
-                <tr>
-                    <td>@item.Id</td>
-                    <td>@item.Name</td>
-                    <td>@item.Locale</td>
-                    <td>@item.CreateDate</td>
-                    <td>@item.UpdateDate</td>
-                </tr>
+                var item = Model.Products[i];
+                using (Html.BeginForm("Update", "Product", FormMethod.Post))
+                {
+                    <tr>
+                        <td scope="row">
+                            @item.Id
+                            @Html.TextBox("id", item.Id, new { style = "display: none;" })
+                            @Html.TextBox("resources", @Html.Raw(Json.Encode(Model)), new { style = "display: none;" })
+                        </td>
+                        <td>
+                            @if (i != Model.UpdateIndex)
+                            {
+                                @item.Name
+                            }
+                            else
+                            {
+                                @Html.TextBox("updateName", item.Name)
+                            }
+                        </td>
+                        <td>
+                            @if (i != Model.UpdateIndex)
+                            {
+                                @item.Locale
+                            }
+                            else
+                            {
+                                @Html.EnumDropDownListFor(m => m.Location, item.Locale)
+                            }
+                        </td>
+                        <td>@item.CreateDate</td>
+                        <td>@item.UpdateDate</td>
+                        @if (i != Model.UpdateIndex)
+                        {
+                            <td>
+                                <button class="btn-primary glyphicon glyphicon-pencil" type="button" onclick="location.href='@Url.Action("UpdateSelect", new { id = @item.Id, resources = @Html.Raw(Json.Encode(Model)) })'" />
+                                <button type="button" class="btn-primary glyphicon glyphicon-trash" onclick="location.href='@Url.Action("Delete", new { id = @item.Id, resources = @Html.Raw(Json.Encode(Model)) })'" />
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                <button class="btn-success glyphicon glyphicon-ok" type="submit" />
+                                <button type="button" class="btn-danger glyphicon glyphicon-remove" onclick="location.href='@Url.Action("Cancel", new { id = @item.Id, resources = @Html.Raw(Json.Encode(Model)) })'" />
+                            </td>
+                        }
+
+                    </tr>
+                }
+            }
+
+            @if (Model.Add)
+            {
+                    <tr>
+
+                        @using (Html.BeginForm("Insert", "Product", FormMethod.Post))
+                        {
+                            <td scope="row">
+                                +
+                            </td>
+                            <td>@Html.TextBox("name")</td>
+                            <td>
+                                @Html.EnumDropDownListFor(m => m.Location, "")
+                            </td>
+                            <td>
+                                @Html.TextBox("resources", @Html.Raw(Json.Encode(Model)), new { style = "display: none;" })
+                            </td>
+                            <td></td>
+                            <td>
+                            <button class="btn-success glyphicon glyphicon-ok" type="submit" />
+                            <button type="button" class="btn-danger glyphicon glyphicon-remove" onclick="location.href='@Url.Action("Cancel", new { id = 0, resources = @Html.Raw(Json.Encode(Model)) })'" />
+                            </td>
+                            @*<td><input type="button" value="D" onclick="location.href='@Url.Action("Insert", new { locate = "", resources = @Html.Raw(Json.Encode(Model)) })'" /></td>*@
+                        }
+                    </tr>
             }
         </tbody>
+
     </table>
 </body>
 </html>
