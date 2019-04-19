@@ -64,7 +64,7 @@
                             }
                             else
                             {
-                                @Html.DropDownListFor(x => x.nowLocate, Model.locate)
+                                @Html.DropDownList("nowLocate", Model.locate)
                             }
                         </td>
                         <td>@item.CreateDate</td>
@@ -92,24 +92,21 @@
             {
                     <tr>
 
-                        @using (Html.BeginForm("Insert", "Product", FormMethod.Post))
+                        @using (Html.BeginForm("Create", "Product", FormMethod.Post))
                         {
                             <td scope="row">
                                 +
                             </td>
                             <td>@Html.TextBox("name")</td>
                             <td>
-                                @Html.EnumDropDownListFor(m => m.Location, "")
-                            </td>
-                            <td>
-                                @Html.TextBox("resources", @Html.Raw(Json.Encode(Model)), new { style = "display: none;" })
+                                @Html.DropDownList("nowLocate", Model.locate)
                             </td>
                             <td></td>
+                            <td></td>
                             <td>
-                            <button class="btn-success glyphicon glyphicon-ok" type="submit" />
-                            <button type="button" class="btn-danger glyphicon glyphicon-remove" onclick="location.href='@Url.Action("List")'" />
+                                <button class="btn-success glyphicon glyphicon-ok" type="submit" />
+                                <button type="button" class="btn-danger glyphicon glyphicon-remove" onclick="location.href='@Url.Action("List")'" />
                             </td>
-                            @*<td><input type="button" value="D" onclick="location.href='@Url.Action("Insert", new { locate = "", resources = @Html.Raw(Json.Encode(Model)) })'" /></td>*@
                         }
                     </tr>
             }

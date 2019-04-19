@@ -1,5 +1,6 @@
 ﻿using ASP_NET_MVC_Q3.Data;
 using ASP_NET_MVC_Q3.Models;
+using ASP_NET_MVC_Q3.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,77 +15,96 @@ namespace ASP_NET_MVC_Q3.Controllers
         ProductViewModel source;
         public ActionResult List()
         {
-            source = resetModel();
+            source = CreateViewModel();
             return View(source);
         }
-
-        public ActionResult Delete(int id)
+        
+        /// <summary>
+        /// Create New Product 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="nowLocate"></param>
+        /// <returns></returns>
+        public ActionResult Create(string name, string nowLocate)
         {
-            source = resetModel();
-            Product.Data = Product.Data.Where(x => x.Id != id).ToList();
-            source.Products = Product.Data;
-            return RedirectToAction("List");
-        }
-        public ActionResult Insert(string name, int Location = -1)
-        {
-            source = resetModel();
-            if (!String.IsNullOrEmpty(name) && Location >= 0)
+            if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(nowLocate))
             {
-                source.Products.Add(
-                    new Product
-                    {
-                        Id = source.Products.Max(x => x.Id) + 1,
-                        Name = name,
-                        Locale = ((locate)Location).ToString(),
-                        CreateDate = DateTime.Now,
-                    });
+                new ProductRepository().Create(name, nowLocate);
             }
 
             return RedirectToAction("List");
         }
-        public ActionResult UpdateSelect(int id)
-        {
-            source = resetModel();
-            source.UpdateIndex = id;
-            source.locate = setLocateList();
-            source.locate.Where(x => x.Value == source.Products.Where(y => y.Id == id).FirstOrDefault().Locale).FirstOrDefault().Selected = true;
-            return View("List", source);
-        }
         
-        public ActionResult AddSelect()
+        /// <summary>
+        /// Update Product's Name and Locate by ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="updateName"></param>
+        /// <param name="nowLocate"></param>
+        /// <returns></returns>
+        public ActionResult Update(int id, string updateName, string nowLocate)
         {
-            source = resetModel();
-            source.Add = true;
-            source.locate = setLocateList();
-            return View("List", source);
-        }
-        
-        [HttpPost]
-        public ActionResult Update(ProductViewModel vm, int id, string updateName)
-        {
-            source = resetModel();
-            source.Products.Where(x => x.Id == id).FirstOrDefault().Name = updateName;
-            source.Products.Where(x => x.Id == id).FirstOrDefault().Locale = vm.nowLocate;
-            source.Products.Where(x => x.Id == id).FirstOrDefault().UpdateDate = DateTime.Now;
-
+            new ProductRepository().Update(id, updateName, nowLocate);
             return RedirectToAction("List");
         }
 
-        public ProductViewModel resetModel()
+        /// <summary>
+        /// Delete Product by ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Delete(int id)
         {
-            source = new ProductViewModel();
-            source.Products = Product.Data;
-            source.UpdateIndex = -1;
-            source.Add = false;
+            new ProductRepository().Delete(id);
+            return RedirectToAction("List");
+        }
+
+        /// <summary>
+        /// Select which one will Update
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult UpdateSelect(int id)
+        {
+            source = CreateViewModel(id);
+            string nowLocate = source.Products.Where(y => y.Id == id).FirstOrDefault().Locale;
+            source.locate.Where(x => x.Text == nowLocate).FirstOrDefault().Selected = true;
+            return View("List", source);
+        }
+        
+        /// <summary>
+        /// Start Insert
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult AddSelect()
+        {
+            source = CreateViewModel(-1, true);
+            return View("List", source);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public ProductViewModel CreateViewModel(int updateId = -1, bool add = false)
+        {
+            source = new ProductViewModel()
+            {
+                Products = new ProductRepository().GetAll(),
+                UpdateIndex = updateId,
+                Add = add,
+                locate = SetLocateList()
+            };
+
             return source;
         }
 
-        public List<SelectListItem> setLocateList()
+        public List<SelectListItem> SetLocateList()
         {
             return Enum.GetValues(typeof(locate)).Cast<locate>().Select(v => new SelectListItem
             {
                 Text = v.ToString(),
-                Value = v.ToString()
+                Value = v.ToString(),
             }).ToList();
         }
     }
