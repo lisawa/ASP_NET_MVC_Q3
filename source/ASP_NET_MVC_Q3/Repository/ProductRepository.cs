@@ -52,9 +52,12 @@ namespace ASP_NET_MVC_Q3.Repository
         /// <param name="locate"></param>
         public void Update(int id, string name, string locate)
         {
-            Product.Data.Where(x => x.Id == id).FirstOrDefault().Name = name;
-            Product.Data.Where(x => x.Id == id).FirstOrDefault().Locale = locate;
-            Product.Data.Where(x => x.Id == id).FirstOrDefault().UpdateDate = DateTime.Now;
+            var m = Product.Data.Where(x => x.Id == id).FirstOrDefault();
+
+
+            m.Name = name;
+            m.Locale = locate;
+            m.UpdateDate = DateTime.Now;
         }
     }
 }
