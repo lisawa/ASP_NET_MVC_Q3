@@ -13,7 +13,7 @@ namespace ASP_NET_MVC_Q3.Interface
 
         void Update(int id, string name, string locate);
 
-        void Create(string Name, string locate);
+        void Create(int id, string Name, string locate);
 
         void Delete(int id);
     }

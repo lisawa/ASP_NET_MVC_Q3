@@ -15,11 +15,11 @@ namespace ASP_NET_MVC_Q3.Repository
         /// </summary>
         /// <param name="Name"></param>
         /// <param name="locate"></param>
-        public void Create(string Name, string locate)
+        public void Create(int nowID, string Name, string locate)
         {
             Product.Data.Add(new Product
             {
-                Id = Product.Data.Max(x => x.Id) + 1,
+                Id = nowID,
                 Name = Name,
                 Locale = locate,
                 CreateDate = DateTime.Now

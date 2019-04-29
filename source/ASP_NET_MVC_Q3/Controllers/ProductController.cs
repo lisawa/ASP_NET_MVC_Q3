@@ -12,9 +12,17 @@ namespace ASP_NET_MVC_Q3.Controllers
 {
     public class ProductController : Controller
     {
+        public static int nowID = 0;
+        public static bool getID = false;
         ProductViewModel source;
         public ActionResult List()
         {
+            if (!getID)
+            {
+                nowID = Product.Data.Max(x => x.Id);
+                getID = true;
+            }
+
             source = CreateViewModel();
             return View(source);
         }
@@ -29,7 +37,8 @@ namespace ASP_NET_MVC_Q3.Controllers
         {
             if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(nowLocate))
             {
-                new ProductRepository().Create(name, nowLocate);
+                nowID++;
+                new ProductRepository().Create(nowID, name, nowLocate);
             }
 
             return RedirectToAction("List");
@@ -107,5 +116,6 @@ namespace ASP_NET_MVC_Q3.Controllers
                 Value = v.ToString(),
             }).ToList();
         }
+        
     }
 }
