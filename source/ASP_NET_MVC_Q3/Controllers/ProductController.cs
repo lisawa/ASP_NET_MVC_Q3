@@ -77,7 +77,7 @@ namespace ASP_NET_MVC_Q3.Controllers
         {
             source = CreateViewModel(id);
             string nowLocate = source.Products.Where(y => y.Id == id).FirstOrDefault().Locale;
-            source.locate.Where(x => x.Text == nowLocate).FirstOrDefault().Selected = true;
+            source.Locate.Where(x => x.Text == nowLocate).FirstOrDefault().Selected = true;
             return View("List", source);
         }
         
@@ -102,7 +102,7 @@ namespace ASP_NET_MVC_Q3.Controllers
                 Products = new ProductRepository().GetAll(),
                 UpdateIndex = updateId,
                 Add = add,
-                locate = SetLocateList()
+                Locate = SetLocateList()
             };
 
             return source;
@@ -110,7 +110,7 @@ namespace ASP_NET_MVC_Q3.Controllers
 
         public List<SelectListItem> SetLocateList()
         {
-            return Enum.GetValues(typeof(locate)).Cast<locate>().Select(v => new SelectListItem
+            return Enum.GetValues(typeof(Locate)).Cast<Locate>().Select(v => new SelectListItem
             {
                 Text = v.ToString(),
                 Value = v.ToString(),

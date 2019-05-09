@@ -16,10 +16,10 @@ namespace ASP_NET_MVC_Q3.Models
 
         public bool Add { get; set; }
 
-        public List<SelectListItem> locate { get; set; }
+        public List<SelectListItem> Locate { get; set; }
 
-        public string nowLocate { get; set; }
+        public string NowLocate { get; set; }
 
-        public locate Location { get; set; }
+        public Locate Location { get; set; }
     }
 }

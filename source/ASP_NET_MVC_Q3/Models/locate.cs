@@ -6,7 +6,7 @@ using System.Web;
 
 namespace ASP_NET_MVC_Q3.Models
 {
-    public enum locate
+    public enum Locate
     {
         //[Display(Name = "Unite State")]
         US,// Unite State
