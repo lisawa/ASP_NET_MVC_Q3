@@ -12,18 +12,17 @@ namespace ASP_NET_MVC_Q3.Controllers
 {
     public class ProductController : Controller
     {
-        public static int nowID = 0;
-        public static bool getID = false;
-        ProductViewModel source;
+        private static int _nowID = 0;
+        private static bool _getID = false;
         public ActionResult List()
         {
-            if (!getID)
+            if (!_getID)
             {
-                nowID = Product.Data.Max(x => x.Id);
-                getID = true;
+                _nowID = Product.Data.Max(x => x.Id);
+                _getID = true;
             }
 
-            source = CreateViewModel();
+            ProductViewModel source = CreateViewModel();
             return View(source);
         }
         
@@ -37,8 +36,8 @@ namespace ASP_NET_MVC_Q3.Controllers
         {
             if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(nowLocate))
             {
-                nowID++;
-                new ProductRepository().Create(nowID, name, nowLocate);
+                _nowID++;
+                new ProductRepository().Create(_nowID, name, nowLocate);
             }
 
             return RedirectToAction("List");
@@ -75,7 +74,7 @@ namespace ASP_NET_MVC_Q3.Controllers
         /// <returns></returns>
         public ActionResult UpdateSelect(int id)
         {
-            source = CreateViewModel(id);
+            ProductViewModel source = CreateViewModel(id);
             string nowLocate = source.Products.Where(y => y.Id == id).FirstOrDefault().Locale;
             source.Locate.Where(x => x.Text == nowLocate).FirstOrDefault().Selected = true;
             return View("List", source);
@@ -87,7 +86,7 @@ namespace ASP_NET_MVC_Q3.Controllers
         /// <returns></returns>
         public ActionResult AddSelect()
         {
-            source = CreateViewModel(-1, true);
+            ProductViewModel source = CreateViewModel(-1, true);
             return View("List", source);
         }
 
@@ -97,7 +96,7 @@ namespace ASP_NET_MVC_Q3.Controllers
         /// <returns></returns>
         public ProductViewModel CreateViewModel(int updateId = -1, bool add = false)
         {
-            source = new ProductViewModel()
+            ProductViewModel source = new ProductViewModel()
             {
                 Products = new ProductRepository().GetAll(),
                 UpdateIndex = updateId,
